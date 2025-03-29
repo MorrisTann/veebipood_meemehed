@@ -5,7 +5,6 @@ export const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
-  // Lae ostukorv Local Storage'ist
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -13,12 +12,10 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
 
-  // Salvesta ostukorv Local Storage'i
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  // Lisa toode ostukorvi
   const addToCart = (product) => {
     setCart((prevCart) => {
       const existingProduct = prevCart.find((item) => item.id === product.id);
@@ -34,18 +31,14 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  // Eemalda toode ostukorvist vaid määratud kogus
   const removeFromCart = (productId, amount) => {
     setCart((prevCart) =>
       prevCart
         .map((item) => {
           if (item.id === productId) {
-            // Kui eemaldatav kogus on väiksem kui olemasolev kogus,
-            // vähenda kogust
             if (item.quantity > amount) {
               return { ...item, quantity: item.quantity - amount };
             }
-            // Kui eemaldatav kogus on võrdne või suurem, eemaldame toote
             return null;
           }
           return item;
@@ -54,8 +47,17 @@ export const CartProvider = ({ children }) => {
     );
   };
 
+  const updateQuantity = (productId, newQuantity) => {
+    if (newQuantity < 1) return;
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === productId ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity }}>
       {children}
     </CartContext.Provider>
   );

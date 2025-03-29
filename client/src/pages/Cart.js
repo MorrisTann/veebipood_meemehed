@@ -1,33 +1,19 @@
-import React, { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
+import { FaTrash } from "react-icons/fa";
 
-// Abifunktsioon pildi laadimiseks
 const getImagePath = (imageName) => {
   try {
     return require(`../assets/${imageName}.jpg`);
-  } catch (err) {
+  } catch {
     return require(`../assets/default.jpg`);
   }
 };
 
 const Cart = () => {
-  const { cart, removeFromCart } = useContext(CartContext);
-  const [removalAmounts, setRemovalAmounts] = useState({});
+  const { cart, removeFromCart, updateQuantity } = useContext(CartContext);
   const navigate = useNavigate();
-
-  // Initsialiseeri eemaldamise kogused igale tootele, seades väärtuseks toote koguse
-  useEffect(() => {
-    const initialAmounts = {};
-    cart.forEach((item) => {
-      initialAmounts[item.id] = item.quantity;
-    });
-    setRemovalAmounts(initialAmounts);
-  }, [cart]);
-
-  const handleRemovalAmountChange = (id, value) => {
-    setRemovalAmounts((prev) => ({ ...prev, [id]: Number(value) }));
-  };
 
   const totalPrice = cart.reduce(
     (total, item) => total + parseFloat(item.price) * item.quantity,
@@ -48,61 +34,44 @@ const Cart = () => {
                 className="flex flex-col sm:flex-row justify-between items-center bg-white shadow-md rounded p-4"
               >
                 <div className="flex items-center">
-                  {/* Pisike pilt */}
                   <img
                     src={getImagePath(item.image_name)}
                     alt={item.name}
                     className="w-16 h-16 object-cover rounded mr-4"
                   />
                   <div>
-                    <h3 className="text-2xl font-semibold">{item.name}</h3>
-                    <p className="text-gray-700">Kogus: {item.quantity}</p>
-                    <p className="text-gray-700">
-                      Hind (kokku):{" "}
-                      {(parseFloat(item.price) * item.quantity).toFixed(2)} €
-                    </p>
+                  <Link
+                    to={`/tooted/${item.id}`}
+                    className="block text-2xl font-semibold text-black hover:text-amber-600 transition"
+                  >
+                    {item.name}
+                  </Link>
+                  <p className="text-gray-700 text-left">Hind: {parseFloat(item.price).toFixed(2)} €</p>
+                  <p className="text-gray-700 text-left">Kokku: {(parseFloat(item.price) * item.quantity).toFixed(2)} €</p>
                   </div>
                 </div>
-                <div className="flex flex-col sm:flex-row items-center">
-                  {/* Eemaldamiseks sisendi väli, algväärtuseks toote kogus */}
+                <div className="flex items-center gap-2 mt-4 sm:mt-0">
                   <input
                     type="number"
                     min="1"
-                    max={item.quantity}
-                    value={removalAmounts[item.id] || item.quantity}
+                    value={item.quantity}
                     onChange={(e) =>
-                      handleRemovalAmountChange(item.id, e.target.value)
+                      updateQuantity(item.id, Number(e.target.value))
                     }
-                    className="border border-gray-300 rounded px-2 py-1 w-20 text-center mr-2"
+                    className="border border-gray-300 rounded px-2 py-1 h-10 w-20 text-center focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                   <button
-                    onClick={() =>
-                      removeFromCart(item.id, removalAmounts[item.id] || item.quantity)
-                    }
+                    onClick={() => removeFromCart(item.id, item.quantity)}
                     title="Eemalda tooted"
-                    className="mt-4 sm:mt-0 bg-red-500 text-white font-bold p-2 rounded hover:bg-red-600 transition duration-300"
+                    className="h-10 w-10 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300 flex items-center justify-center"
                   >
-                    {/* Inline SVG ikoon - prillikas "trash" ikoon */}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5-4h4a2 2 0 012 2v0a2 2 0 01-2 2h-4a2 2 0 01-2-2v0a2 2 0 012-2z"
-                      />
-                    </svg>
+                    <FaTrash className="w-5 h-5" />
                   </button>
                 </div>
               </li>
             ))}
           </ul>
-          <div className="mt-8 flex justify-between items-center">
+          <div className="mt-8 flex flex-wrap justify-between items-center gap-4">
             <h2 className="text-3xl font-bold">
               Kokku: {totalPrice.toFixed(2)} €
             </h2>
