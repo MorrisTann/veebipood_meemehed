@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  const { addToCart } = useContext(CartContext);
+  const { cart, addToCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,35 +23,73 @@ const ProductsPage = () => {
     }
   };
 
+  const getCartQuantity = (productId) => {
+    const item = cart.find((i) => i.id === productId);
+    return item ? item.quantity : 0;
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {products.map((product) => (
-        <div
-          key={product.id}
-          // Kui vajutad tootekasti (välja arvatud nupp) siis navigeerib detailile:
-          onClick={() => navigate(`/tooted/${product.id}`)}
-          className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 cursor-pointer"
-        >
-          <img
-            src={getImagePath(product.image_name)}
-            alt={product.name}
-            className="w-full h-64 object-cover"
-          />
-          <div className="p-4">
-            <h3 className="text-2xl font-semibold mb-2">{product.name}</h3>
-            <p className="text-xl font-bold text-black mt-2">{product.price}€</p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation(); // ei lähe detailile, vaid lisab ostukorvi
-                addToCart(product);
-              }}
-              className="mt-4 bg-black hover:text-gray-600 text-white font-bold py-2 px-4 rounded transition duration-300"
+    <div className="max-w-6xl mx-auto px-4 py-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {products.map((product) => {
+          const inCart = getCartQuantity(product.id);
+          const stockLeft = product.stock - inCart;
+          const isOutOfStock = product.stock === 0;
+          const isMaxReached = stockLeft <= 0;
+
+          return (
+            <div
+              key={product.id}
+              onClick={() => navigate(`/tooted/${product.id}`)}
+              className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 cursor-pointer flex flex-col"
             >
-              Lisa ostukorvi
-            </button>
-          </div>
-        </div>
-      ))}
+              <img
+                src={getImagePath(product.image_name)}
+                alt={product.name}
+                className="w-full h-64 object-cover"
+              />
+              <div className="p-4 flex flex-col justify-between flex-1">
+                <div>
+                  <h3 className="text-2xl font-semibold mb-2">{product.name}</h3>
+                  <p className="text-xl font-bold text-black">{product.price}€</p>
+                </div>
+
+                <div className="mt-4">
+                  {isOutOfStock ? (
+                    <p className="text-red-600 font-semibold mt-6">
+                      Toode ei ole hetkel saadaval!
+                    </p>
+                  ) : (
+                    <>
+                      {stockLeft <= 4 && (
+                        <p className="text-sm text-amber-600 mb-2">
+                          {stockLeft === 0
+                            ? "Rohkem tooteid laos ei ole."
+                            : `Ainult ${stockLeft} veel laos!`}
+                        </p>
+                      )}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addToCart(product);
+                        }}
+                        disabled={isMaxReached}
+                        className={`font-bold py-2 px-4 rounded transition duration-300 ${
+                          isMaxReached
+                            ? "bg-gray-400 text-white cursor-not-allowed"
+                            : "bg-black text-white hover:text-amber-600"
+                        }`}
+                      >
+                        Lisa ostukorvi
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

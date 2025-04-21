@@ -27,7 +27,7 @@ const Home = () => {
         </p>
 
         <Link
-          to="/tooted"
+          to="/pood"
           className="mt-8 bg-white text-black px-6 py-3 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 text-base sm:text-lg font-semibold"
         >
           Vaata tooteid
