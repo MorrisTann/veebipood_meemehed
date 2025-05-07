@@ -4,16 +4,20 @@ import axios from "axios";
 import { CartContext } from "../context/CartContext";
 
 const ProductDetails = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const [product, setProduct] = useState(null);
   const { cart, addToCart } = useContext(CartContext);
-
+  
   useEffect(() => {
+    if (!slug) return;
+    
     axios
-      .get(`${process.env.REACT_APP_API_URL}/api/products/${id}`)
+      .get(`${process.env.REACT_APP_API_URL}/api/products/slug/${slug}`)
       .then((response) => setProduct(response.data))
-      .catch((error) => console.error("Toodet ei saanud laadida:", error));
-  }, [id]);
+      .catch((error) => {
+        console.error("Toodet ei saanud laadida:", error?.response?.data || error.message || error);
+      });
+  }, [slug]);
 
   const getCartQuantity = (productId) => {
     const item = cart.find((i) => i.id === productId);
@@ -38,7 +42,7 @@ const ProductDetails = () => {
   return (
     <div className="max-w-5xl mx-auto p-4">
       <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col md:flex-row md:items-center">
           <div className="md:w-1/2">
             <img
               src={getImagePath(product.image_name)}
@@ -54,30 +58,25 @@ const ProductDetails = () => {
             <p className="mb-2"><strong>Netokaal:</strong> {product.net_weight} g</p>
             <p className="mb-2"><strong>Allergeenid:</strong> {product.allergens}</p>
             <p className="mb-4"><strong>Hind 100g kohta:</strong> {product.price_per_100g}€</p>
-            {isOutOfStock ? (
-              <p className="mt-6 text-red-600 font-semibold">Toode on laost otsas</p>
-            ) : (
-              <>
-                {stockLeft <= 4 && (
-                  <p className="text-sm text-amber-600 mb-2">
-                    {stockLeft === 0
-                      ? "Rohkem tooteid laos ei ole."
-                      : `Ainult ${stockLeft} veel laos!`}
-                  </p>
-                )}
-                <button
-                  onClick={() => addToCart(product)}
-                  disabled={isMaxReached}
-                  className={`mt-4 font-bold py-2 px-4 rounded transition duration-300 ${
-                    isMaxReached
-                      ? "bg-gray-400 text-white cursor-not-allowed"
-                      : "bg-black text-white hover:bg-gray-800"
-                  }`}
-                >
-                  Lisa ostukorvi
-                </button>
-              </>
+            {stockLeft <= 4 && !isMaxReached && (
+              <p className="text-bold text-orange-700 mb-2 font-medium">
+                {stockLeft === 1
+                  ? "Ainult 1 veel laos!"
+                  : `Ainult ${stockLeft} veel laos!`}
+              </p>
             )}
+
+            <button
+              onClick={() => addToCart(product)}
+              disabled={isMaxReached}
+              className={`mt-4 font-bold py-2 px-4 rounded transition duration-300 ${
+                isMaxReached
+                  ? "bg-gray-400 text-white cursor-not-allowed"
+                  : "bg-black text-white hover:bg-gray-800"
+              }`}
+            >
+              {isMaxReached ? "Välja müüdud" : "Lisa ostukorvi"}
+            </button>
           </div>
         </div>
 

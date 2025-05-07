@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
-
 
 const Register = () => {
   const navigate = useNavigate();
@@ -14,6 +13,12 @@ const Register = () => {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden");
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,23 +33,23 @@ const Register = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const emailRegex = /\S+@\S+\.\S+/;
     if (!emailRegex.test(formData.email)) {
       setError("Palun sisesta kehtiv e-mail");
       return;
     }
-  
+
     if (formData.password !== formData.confirmPassword) {
       setError("Paroolid ei kattu.");
       return;
     }
-  
+
     if (!isPasswordValid(formData.password)) {
       setError("Parool peab olema vähemalt 8 tähemärki pikk, sisaldama suurt tähte ja numbrit.");
       return;
     }
-  
+
     axios
       .post(`${process.env.REACT_APP_API_URL}/api/register`, {
         username: formData.username,
@@ -69,20 +74,17 @@ const Register = () => {
       });
   };
 
-  
-
   return (
-    <div className="fixed inset-0 bg-gray-100 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-100 px-4 py-20">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
         <h1 className="text-3xl font-bold text-center mb-6">Registreerimine</h1>
-        {success && (
-          <p className="text-green-500 text-center mb-4">{success}</p>
-        )}
+        {success && <p className="text-green-500 text-center mb-4">{success}</p>}
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700 mb-1">Kasutajanimi</label>
+            <label htmlFor="username" className="block text-gray-700 mb-1">Kasutajanimi</label>
             <input
+              id="username"
               type="text"
               name="username"
               value={formData.username}
@@ -92,8 +94,9 @@ const Register = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-700 mb-1">Email</label>
+            <label htmlFor="email" className="block text-gray-700 mb-1">E-mail</label>
             <input
+              id="email"
               type="email"
               name="email"
               value={formData.email}
@@ -103,8 +106,9 @@ const Register = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-700 mb-1">Parool</label>
+            <label htmlFor="password" className="block text-gray-700 mb-1">Parool</label>
             <input
+              id="password"
               type="password"
               name="password"
               value={formData.password}
@@ -114,8 +118,9 @@ const Register = () => {
             />
           </div>
           <div>
-            <label className="block text-gray-700 mb-1">Korda parooli</label>
+            <label htmlFor="confirmPassword" className="block text-gray-700 mb-1">Korda parooli</label>
             <input
+              id="confirmPassword"
               type="password"
               name="confirmPassword"
               value={formData.confirmPassword}
@@ -131,9 +136,9 @@ const Register = () => {
             Registreeri
           </button>
         </form>
-        <p className="mt-6 text-center text-gray-600">
+        <p className="mt-6 text-center text-gray-800">
           Konto juba olemas?{" "}
-          <Link to="/login" className="text-blue-600 hover:underline">
+          <Link to="/login" className="text-blue-700 font-semibold hover:underline">
             Logi sisse
           </Link>
         </p>

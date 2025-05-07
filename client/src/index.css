@@ -5,9 +5,26 @@
 body {
     background-color: #f3f4f6;
     color: black;
-    font-family: 'Arial', sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    color: bla;
+    color: black;
 }
+
+.about-content {
+  contain: layout style;
+}
+
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+  }
+  
+  .fill-mode-both {
+    animation-fill-mode: both;
+  }

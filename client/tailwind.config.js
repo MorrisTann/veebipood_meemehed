@@ -6,7 +6,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-      'base': 'colorCode', 
+        'base': '#f7fafc',
+      },
+      fontFamily: {
+        sans: ['system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+      },
+      textAlign: {
+        justify: 'justify',
       },
     },
   },
