@@ -1,7 +1,10 @@
 import React from "react";
-import teeTooted from "../assets/tee_tooted.jpg";
-import vürtsikadTooted from "../assets/vürtsikad_tooted.jpg";
-import šokoTooted from "../assets/šoko_tooted.jpg";
+// If using Next.js, import the Image component
+// import Image from 'next/image';
+
+import teeTooted from '../assets/tee_tooted.jpg';
+import vurtsikadTooted from '../assets/vürtsikad_tooted.jpg';
+import sokoTooted from '../assets/šoko_tooted.jpg';
 
 const AboutProducts = () => {
   return (
@@ -9,26 +12,57 @@ const AboutProducts = () => {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold mb-8 text-center">Meie Maitsemeed</h1>
         <p className="text-lg text-gray-700 mb-6">
-          Toodete põhikomponendiks on mesi, mis on pärit Valgamaalt. Tooted jagunevad kasutusalade ja komponentide põhjal kolme gruppi.
+        Meie toodete põhikomponendiks on puhas ja kvaliteetne mesi, mis pärineb Valgamaal asuvast ettevõttest Saavaste ja Loos. Tooted on jaotatud kolme gruppi vastavalt kasutusotstarbele ja lisatud koostisosadele, et pakkuda midagi igale maitsele!.
         </p>
 
-        <h2 className="text-3xl font-semibold mt-8 mb-4">Šokolaadimaitsemeed:</h2>
-        <p className="text-lg text-gray-700 mb-4">
-          Kui lisame meele tumedat šokolaadi ja vastavat koostisosa, saame tulemuseks šokolaadimaitselise maitsemee, mis kuulub meie toodete esimesse gruppi. Need sobivad määrdeks näiteks soojadele pannkookidele või röstsaiadele. Neist saab valmistada ka uudseid, maitsvaid ning tervislikke kakaojooke. Selles viimases peitubki meie toote peamine uuenduslikkus.
-        </p>
-        <img src={šokoTooted} alt="Šokolaadimaitsemeed" className="w-2/3 mx-auto rounded mb-8 shadow" />
+        <section className="mt-8">
+          <h2 className="text-3xl font-semibold mb-4">Šokolaadimaitsemeed:</h2>
+          <p className="text-lg text-gray-700 mb-4">
+          Kui lisame meie meele tumedat šokolaadi ja hoolikalt valitud koostisosi, sünnib rikkalik šokolaadimaitseline maitsemesi – meie tootevaliku esimese grupi tõeline staar. See delikatess sobib ideaalselt määrimiseks soojadele pannkookidele, krõbedale röstsaiale või nautimiseks niisama lusikaga. Veelgi enam – sellest saab valmistada uudseid, maitsvaid ja tervislikke kakaojooke. Just siin avaldubki meie toote kõige olulisem uuenduslikkus – looduslik alternatiiv šokolaadijoogile, ilma lisatud suhkruta.
+          </p>
+          {/* Use width and height to prevent layout shifts and lazy load */}
+          <img
+            src={sokoTooted}
+            alt="Šokolaadimaitsemeed"
+            className="w-full max-w-2xl mx-auto rounded mb-8 shadow"
+            width={1209}
+            height={892}
+            loading="lazy"
+            decoding="async"
+          />
+        </section>
 
-        <h2 className="text-3xl font-semibold mt-8 mb-4">Teega seotud maitsemeed:</h2>
-        <p className="text-lg text-gray-700 mb-4">
-          Tee valmistamiseks tuleb lahustada maitsemesi kuumas vees. Nendest kaks, maasika-jõhvika maitsemesi ning astelpaju maitsemesi on mõeldud tee sisse segamiseks, et teele mõnusalt magus marjamaitse lisada. Need maitsemeed on toodetud marjajahust ja meest. Siia gruppi kuulub ka piparmündi maitsemesi, mis on mõeldud klassikalise piparmündi tee valmistamiseks. See koosneb meest ja ise kuivatatud ning jahvatatud piparmündist. Nagu ka šokolaadi maitsemeed, sobivad ka kõik need eelnimetatud maitsemeed sooja pannkoogi või röstsaiaga.
-        </p>
-        <img src={teeTooted} alt="Teega seotud maitsemeed" className="w-2/3 mx-auto rounded mb-8 shadow" />
+        <section className="mt-8">
+          <h2 className="text-3xl font-semibold mb-4">Teega seotud maitsemeed:</h2>
+          <p className="text-lg text-gray-700 mb-4">
+          Tee valmistamine pole kunagi olnud nii lihtne ja maitsev – piisab vaid sellest, kui segada maitsemesi kuuma vee sisse. Meie maasika-jõhvika ning astelpaju maitsemeed on loodud just selleks, et rikastada teed mõnusa, magusa marjamaitsega. Need meed valmivad kvaliteetsest meest ja looduslikust marjajahust. Samasse gruppi kuulub ka piparmündi maitsemesi, mis on valmistatud meest ning käsitsi kuivatatud ja jahvatatud piparmündist – ideaalne klassikalise piparmünditee valmistamiseks. Nagu ka šokolaadimaitselised variandid, sobivad need meed suurepäraselt määrimiseks pannkookidele või röstsaiale, pakkudes mitmekülgset ja looduslähedast maitseelamust.
+          </p>
+          <img
+            src={teeTooted}
+            alt="Teega seotud maitsemeed"
+            className="w-full max-w-2xl mx-auto rounded mb-8 shadow"
+            width={600}
+            height={470}
+            loading="lazy"
+            decoding="async"
+          />
+        </section>
 
-        <h2 className="text-3xl font-semibold mt-8 mb-4">Vürtsikad maitsemeed:</h2>
-        <p className="text-lg text-gray-700 mb-4">
-          Kolmandasse gruppi kuulub hetkel vaid üks vürtsikas toode, kuid plaanime tootearendust teha ning seda gruppi täiendada. Vürtsikaks maitsemeeks on ürdi-pipra maitsemesi, mis teeb kokandushuviliste elu lihtsamaks ja huvitavamaks. See koosneb meest ja erinevatest ürtidest ning on mõeldud ahjuliha marineerimiseks ja küpsetamiseks. Kui tavaliselt tuleb ise liha marineerides või maitsestades kõik komponendid eraldi lisada, siis nüüd saab vaid lisada ürdi-pipra maitsemee, kus on juba ürdid ja sool sees. Mesi seob kõik need komponendid omavahel ja aitab neil liha sisse imbuda. Lisaks sellele annab mesi lihale ka mõnusa magusa-vürtsika maitse. Kõik, mida lihaarmastaja tegema peab, et liha maitsestada, on maitsemee kandmine lihale.
-        </p>
-        <img src={vürtsikadTooted} alt="Vürtsikad maitsemeed" className="w-2/3 mx-auto rounded shadow" />
+        <section className="mt-8">
+          <h2 className="text-3xl font-semibold mb-4">Vürtsikad maitsemeed:</h2>
+          <p className="text-lg text-gray-700 mb-4">
+          Kolmandasse tootegruppi kuulub hetkel üks eriline ja vürtsikas uudistoode – ürdi-pipra maitsemesi, kuid plaanime lähitulevikus seda gruppi täiendada. See maitserikas mesi on loodud just kokandushuvilistele, kes hindavad lihtsust ja maitset. Ürdi-pipra maitsemesi koosneb hoolikalt valitud meest ja ürtidest ning sobib suurepäraselt ahjuliha marineerimiseks ja küpsetamiseks. Kui tavaliselt tuleb kõik maitseained ise kokku segada, siis nüüd piisab vaid ühest komponendist – maitsemeest, milles on juba ürdid ja sool olemas. Mesi seob kõik maitsed ühtseks tervikuks ning aitab neil liha sisse imbuda, andes tulemuseks hõrgu, magus-vürtsika maitsega roa.
+          </p>
+          <img
+            src={vurtsikadTooted}
+            alt="Vürtsikad maitsemeed"
+            className="w-full max-w-2xl mx-auto rounded shadow"
+            width={607}
+            height={422}
+            loading="lazy"
+            decoding="async"
+          />
+        </section>
       </div>
     </div>
   );

@@ -122,7 +122,7 @@ const Cart = () => {
                     />
                     <div>
                       <Link
-                        to={`/tooted/${item.id}`}
+                        to={`/tooted/${item.slug}`}
                         className="block text-2xl font-semibold text-black hover:text-amber-600 transition"
                       >
                         {item.name}

@@ -48,10 +48,12 @@ const sendInvoiceEmail = async ({ order, orderItems, to }) => {
 
         <hr style="margin: 30px 0;" />
         <p style="text-align: center; margin-top: 40px; font-size: 16px;">
-        📦 Su pakk on peagi teel! Aitäh tellimuse eest!
+        📦 Tooted on peagi sinuga! Aitäh tellimuse eest!
         </p>
-        <p>Kui sul on küsimusi, võta meiega julgelt ühendust.<br />Meemehed 🍯</p>
-
+        <p>Kui sul on küsimusi, võta meiega julgelt ühendust.<br />
+        E-post: <a href="mailto:meemehed@gmail.com">meemehed@gmail.com</a><br />
+        Telefon: <a href="tel:+37256992860">+372 5699 2860</a><br />
+        Meemehed 🍯</p>
       </div>
     </div>
   `;

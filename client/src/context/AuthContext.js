@@ -5,6 +5,7 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // <- uus olek
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -17,7 +18,15 @@ export const AuthProvider = ({ children }) => {
           const isAdmin = res.data.email === "meemehed.kinnitus@gmail.com";
           setUser({ ...res.data, isAdmin });
         })
-        .catch(() => setUser(null));
+        .catch(() => {
+          setUser(null);
+        })
+        .finally(() => {
+          setLoading(false); // <- lõpeta ootamine
+        });
+    } else {
+      setUser(null);
+      setLoading(false); // <- pole tokenit, valmis kohe
     }
   }, []);
 
@@ -31,7 +40,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );

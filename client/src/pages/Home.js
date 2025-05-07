@@ -1,36 +1,79 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import avalehefoto from "../assets/avalehefoto.jpg";
 
 const Home = () => {
+  useEffect(() => {
+    document.body.classList.add("overflow-hidden");
+
+    const preventScroll = (e) => {
+      e.preventDefault();
+    };
+
+    window.addEventListener("wheel", preventScroll, { passive: false });
+    window.addEventListener("touchmove", preventScroll, { passive: false });
+
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+      window.removeEventListener("wheel", preventScroll);
+      window.removeEventListener("touchmove", preventScroll);
+    };
+  }, []);
+
   return (
-    <div className="relative h-full w-full overflow-x-hidden">
+    <div className="relative w-full h-screen overflow-hidden">
       {/* Taustapilt */}
       <img
         src={avalehefoto}
-        alt="Meemehed"
-        className="absolute inset-0 w-full h-full object-cover brightness-90"
+        alt="Meemehed brändi avalehe taustapilt"
+        fetchpriority="high"
+        className="fixed inset-0 w-full h-full object-cover"
       />
 
-      {/* Tekstikast + läbipaistev kiht */}
-      <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-center px-4">
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-white drop-shadow-md tracking-wide break-words">
+      {/* Läbipaistev tume kiht */}
+      <div className="fixed inset-0 bg-gradient-to-b from-black/60 via-black/40 to-transparent"></div>
+
+      {/* Tekstikast */}
+      <div className="relative z-10 flex flex-col items-center justify-center text-center w-full h-screen px-6">
+        <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white drop-shadow-lg tracking-wide mb-2 animate-fade-in delay-[200ms] fill-mode-both">
           MEEMEHED
         </h1>
-        <h2 className="text-xl sm:text-2xl md:text-4xl font-bold text-white mt-4 break-words">
-          KVALITEETSED JA UUDSED MAITSEMEED
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-white mt-4 animate-fade-in delay-[600ms] fill-mode-both">
+          KVALITEETSED JA INNOVAATILISED MAITSEMEED
         </h2>
-        <p className="text-sm sm:text-base md:text-lg text-white max-w-md sm:max-w-xl mt-4 break-words">
-          Valmistamisel on kasutatud Lõuna-Eestis korjatud Saavaste &amp; Loos mett. 
-          Kõik tooted on valmistatud käsitööna ning rohke armastusega. Tootevalik on väga lai ja kõigil on palju kasutusalasid: 
-          määri saiale, pane pannakale, tee kakaod, sega tee sisse või hoopis marineeri liha – leia omale sobiv!
-        </p>
 
+        {/* Sotsiaalmeedia ikoonid */}
+        <div className="flex space-x-6 mt-8 animate-fade-in delay-[1000ms] fill-mode-both">
+          <a
+            href="https://www.facebook.com/Meemehed"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Meemehed Facebookis"
+            className="bg-white p-3 rounded-full shadow-lg hover:bg-gray-400 transition duration-300"
+          >
+            <FaFacebookF className="text-black text-2xl" />
+          </a>
+          <a
+            href="https://www.instagram.com/Meemehed"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Meemehed Instagramis"
+            className="bg-white p-3 rounded-full shadow-lg hover:bg-gray-400 transition duration-300"
+          >
+            <FaInstagram className="text-black text-2xl" />
+          </a>
+        </div>
+
+        {/* Vaata tooteid nupp */}
         <Link
           to="/pood"
-          className="mt-8 bg-white text-black px-6 py-3 rounded-full shadow-lg hover:bg-gray-200 transition duration-300 text-base sm:text-lg font-semibold"
+          className="mt-8 animate-fade-in delay-[1400ms]"
+          aria-label="Vaata tooteid"
         >
-          Vaata tooteid
+          <span className="bg-white text-black font-bold text-lg px-8 py-4 rounded-full shadow-lg hover:bg-gray-400 transition duration-300">
+            Vaata tooteid
+          </span>
         </Link>
       </div>
     </div>

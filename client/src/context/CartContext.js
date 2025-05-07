@@ -14,7 +14,7 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
-    console.log("💾 Cart saved to localStorage:", cart);
+    console.log("Cart saved to localStorage:", cart);
   }, [cart]);
 
   const addToCart = (product) => {
@@ -35,7 +35,15 @@ export const CartProvider = ({ children }) => {
           alert(`Toode "${product.name}" on otsas.`);
           return prevCart;
         }
-        return [...prevCart, { ...product, quantity: 1 }];
+        return [...prevCart, { 
+          id: product.id,
+          name: product.name,
+          price: product.price,
+          image_name: product.image_name,
+          slug: product.slug,
+          stock: product.stock,
+          quantity: 1
+        }];
       }
     });
   };

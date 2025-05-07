@@ -10,8 +10,10 @@ const Account = () => {
   const [orders, setOrders] = useState([]);
   const [newsletter, setNewsletter] = useState(false);
   const [expandedOrders, setExpandedOrders] = useState({});
-  const [showRecipe, setShowRecipe] = useState(false);
+  const [showRecipe, setShowRecipe] = useState(true);
   const [showOrders, setShowOrders] = useState(true);
+  const [activeTab, setActiveTab] = useState("orders");
+
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -77,140 +79,193 @@ const Account = () => {
   return (
     <div className="min-h-screen bg-white py-12 px-4">
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow">
-        <div className="flex justify-between items-center cursor-pointer mb-4" onClick={() => setShowOrders((prev) => !prev)}>
-          <h1 className="text-3xl font-bold">Varasemad tellimused</h1>
-          {showOrders ? <FaChevronUp /> : <FaChevronDown />}
+        {/* TAB MENÜÜ */}
+        <div className="flex flex-wrap justify-center gap-4 mb-8">
+          <button
+            className={`min-w-[120px] px-4 py-2 font-bold rounded-full transition duration-200 ${activeTab === "orders" ? "bg-gray-800 text-white" : "bg-gray-200 text-black"}`}
+            onClick={() => setActiveTab("orders")}
+          >
+            Tellimused
+          </button>
+          <button
+            className={`min-w-[120px] px-4 py-2 font-bold rounded-full transition duration-200 ${activeTab === "recipe" ? "bg-gray-800 text-white" : "bg-gray-200 text-black"}`}
+            onClick={() => setActiveTab("recipe")}
+          >
+            Retseptid
+          </button>
+          <button
+            className={`min-w-[120px] px-4 py-2 font-bold rounded-full transition duration-200 ${activeTab === "settings" ? "bg-gray-800 text-white" : "bg-gray-200 text-black"}`}
+            onClick={() => setActiveTab("settings")}
+          >
+            Seaded
+          </button>
         </div>
-
-        {showOrders && (
-          orders.length === 0 ? (
-            <p className="text-black">Sul ei ole veel tellimusi.</p>
-          ) : (
-            <ul className="space-y-4">
-              {orders.map((order) => (
-                <li key={order.id} className="bg-gray-50 p-4 rounded shadow">
-                  <div
-                    className="flex justify-between items-center cursor-pointer"
-                    onClick={() => toggleOrder(order.id)}
-                  >
-                    <div>
-                      <p className="font-semibold">Tellitud: {new Date(order.order_date).toLocaleString()}</p>
-                      <p>Kokku: {order.total_price} €</p>
-                    </div>
-                    {expandedOrders[order.id] ? <FaChevronUp /> : <FaChevronDown />}
-                  </div>
-                  {expandedOrders[order.id] && (
-                    <div className="mt-3 space-y-2 text-black">
-                      <p><strong>Nimi:</strong> {order.name}</p>
-                      <p><strong>Telefon:</strong> {order.phone}</p>
-                      <p><strong>E-mail:</strong> {order.customer_email}</p>
-                      <p><strong>Ettevõte:</strong> {order.company}</p>
-                      <p><strong>KMKR:</strong> {order.vat}</p>
-                      <p><strong>Aadress:</strong> {order.address1} {order.address2}</p>
-                      <p><strong>Linn / Postiindeks:</strong> {order.city} / {order.postal_code}</p>
-                      <p><strong>Riik:</strong> {order.country}</p>
-                      <p><strong>Tarneviis:</strong> {order.shipping_method}</p>
-                      {order.terminal_name && <p><strong>Pakiautomaat:</strong> {order.terminal_name}</p>}
-                      {order.pickup_location && <p><strong>Asukoht:</strong> {order.pickup_location}</p>}
+  
+        {/* TELLIMUSED */}
+        {activeTab === "orders" && (
+          <>
+            <h1 className="text-3xl font-bold mb-4">Varasemad tellimused</h1>
+            {orders.length === 0 ? (
+              <p className="text-black">Sul ei ole veel tellimusi.</p>
+            ) : (
+              <ul className="space-y-4">
+                {orders.map((order) => (
+                  <li key={order.id} className="bg-gray-50 p-4 rounded shadow">
+                    <div
+                      className="flex justify-between items-center cursor-pointer"
+                      onClick={() => toggleOrder(order.id)}
+                    >
                       <div>
-                        <p><strong>Tooted:</strong></p>
-                        <ul className="list-disc list-inside text-black">
-                          {order.order_items
-                            .filter(item => !item.name.toLowerCase().includes("tarne"))
-                            .map((item, i) => (
-                              <li key={i}>{item.name} x {item.quantity}</li>
-                          ))}
-                        </ul>
+                        <p className="font-semibold">
+                          Tellitud: {new Date(order.order_date).toLocaleString("et-EE", {
+                            day: "2-digit",
+                            month: "2-digit",
+                            year: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit"
+                          })}
+                        </p>
+                        <p>Kokku: {order.total_price} €</p>
                       </div>
+                      {expandedOrders[order.id] ? <FaChevronUp /> : <FaChevronDown />}
                     </div>
-                  )}
-                </li>
-              ))}
-            </ul>
-          )
+                    {expandedOrders[order.id] && (
+                      <div className="mt-3 space-y-2 text-black">
+                        <p><strong>Nimi:</strong> {order.name}</p>
+                        <p><strong>Telefon:</strong> {order.phone}</p>
+                        <p><strong>E-mail:</strong> {order.customer_email}</p>
+                        <p><strong>Ettevõte:</strong> {order.company}</p>
+                        <p><strong>KMKR:</strong> {order.vat}</p>
+                        <p><strong>Aadress:</strong> {order.address1} {order.address2}</p>
+                        <p><strong>Linn / Postiindeks:</strong> {order.city} / {order.postal_code}</p>
+                        <p><strong>Riik:</strong> {order.country}</p>
+                        <p><strong>Tarneviis:</strong> {order.shipping_method}</p>
+                        {order.terminal_name && <p><strong>Pakiautomaat:</strong> {order.terminal_name}</p>}
+                        {order.pickup_location && <p><strong>Asukoht:</strong> {order.pickup_location}</p>}
+                        <div>
+                          <p><strong>Tooted:</strong></p>
+                          <ul className="list-disc list-inside text-black">
+                            {order.order_items
+                              .filter(item => !item.name.toLowerCase().includes("tarne"))
+                              .map((item, i) => (
+                                <li key={i}>{item.name} x {item.quantity}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
+        )}
+  
+        {/* RETSEPT */}
+        {activeTab === "recipe" && (
+          <div className="text-black space-y-4">
+            {/* Pealkiri + toggler */}
+            <div
+              className="flex justify-between items-center cursor-pointer"
+              onClick={() => setShowRecipe((prev) => !prev)}
+            >
+              <h1 className="text-3xl font-bold">Salajane jääkohvi retsept</h1>
+              {showRecipe ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
+
+            {showRecipe && (
+              <div className="space-y-4">
+                <p>
+                  ☀️ <strong>Kas tunned mõnusal suvehommikul, et tahaks klaasikest värskendavat jääkohvi?</strong><br />
+                  Meie retseptiga saad selle <strong>imelihtsalt koduste vahenditega</strong> valmis teha!
+                </p>
+
+                <p className="font-semibold">🛒 Sul läheb vaja:</p>
+                <ul className="list-disc list-inside">
+                  <li>0,5–2 sl <strong>Meemeeste maitsemett šokolaadiga</strong> (võib olla ka muu šokolaadimee variant)</li>
+                  <li>2 sl lahustuvat kohvi</li>
+                  <li>300 ml piima</li>
+                  <li>Jääkuubikuid (soovi korral)</li>
+                </ul>
+
+                <p>
+                  🧊 <strong>Jääkohv võib tunduda eksootiline ja keeruline,</strong> kuid tegelikult on seda <strong>lihtne teha</strong> ja tulemus on imeline!
+                </p>
+
+                <p>
+                  🍯 <strong>Miks kasutada just Meemeeste maitsemett?</strong><br />
+                  – Suhkru asemel looduslik, tervislik ja maitsvam valik!
+                </p>
+
+                <h2 className="text-xl font-semibold mt-6">☕ Kohvisegu valmistamine:</h2>
+                <ul className="list-disc list-inside">
+                  <li>2 sl lahustuvat kohvi</li>
+                  <li>0,5–2 sl šokolaadimett (vastavalt maitse-eelistusele)</li>
+                  <li>1 sl pruuni suhkrut (soovi korral – teeb segu kreemisemaks)</li>
+                  <li>2 sl leiget vett</li>
+                </ul>
+                <p>Vispelda või mikserda, kuni tekib kreemjas ja ühtlane kohvisegu.</p>
+
+                <h2 className="text-xl font-semibold mt-6">🥛 Serveerimine:</h2>
+                <ul className="list-disc list-inside">
+                  <li>Vala klaasi 1/3 piima</li>
+                  <li>Lisa kohvisegu ja sega korralikult</li>
+                  <li>Viimane piimakiht + vaht klaasi peale</li>
+                  <li>Lisa jääkuubikud ❄️ ja <strong>naudi!</strong></li>
+                </ul>
+              </div>
+            )}
+
+            {/* Allaserva lisainfo */}
+            <div className="pt-6">
+              <p className="text-center text-gray-600 font-medium">
+                📢 Hoia silm peal – uued retseptid ilmuvad peagi!
+              </p>
+            </div>
+            {/* Uudiskiri */}
+            <div className="flex items-center">
+              <input
+                type="checkbox"
+                id="newsletter"
+                checked={newsletter}
+                onChange={handleNewsletterChange}
+                className="mr-2"
+              />
+              <label htmlFor="newsletter">Soovin liituda uudiskirjaga</label>
+            </div>
+          </div>
         )}
 
-        <div className="mt-10">
-          <div className="flex justify-between items-center cursor-pointer" onClick={() => setShowRecipe(prev => !prev)}>
-            <h1 className="text-3xl font-bold">Salajane jääkohvi retsept</h1>
-            {showRecipe ? <FaChevronUp /> : <FaChevronDown />}
-          </div>
+        {/* SEADED */}
+        {activeTab === "settings" && (
+          <div className="text-black space-y-6">
+            <h1 className="text-3xl font-bold mb-4">Seaded</h1>
 
-          {showRecipe && (
-            <div className="mt-4 text-black space-y-4">
-              <p>
-                ☀️ <strong>Kas tunned mõnusal suvehommikul, et tahaks klaasikest värskendavat jääkohvi?</strong><br />
-                Meie retseptiga saad selle <strong>imelihtsalt koduste vahenditega</strong> valmis teha!
-              </p>
-
-              <p className="font-semibold">🛒 Sul läheb vaja:</p>
-              <ul className="list-disc list-inside">
-                <li>0,5–2 sl <strong>Meemeeste maitsemett šokolaadiga</strong> (võib olla ka muu šokolaadimee variant)</li>
-                <li>2 sl lahustuvat kohvi</li>
-                <li>300 ml piima</li>
-                <li>Jääkuubikuid (soovi korral)</li>
-              </ul>
-
-              <p>
-                🧊 <strong>Jääkohv võib tunduda eksootiline ja keeruline,</strong> kuid kohe lükkame selle müüdi ümber.
-                Tegelikult on seda <strong>üsna lihtne teha</strong> ning see <em>maitseelamus</em> on pärast seda kindlasti väärt!
-              </p>
-
-              <p>
-                🍯 <strong>Miks kasutada just Meemeeste maitsemett?</strong><br />
-                – Tavaliselt tehakse magusat jääkohvi suhkruga, mis <strong>ei ole pooltki nii tervislik</strong> kui mesi!
-              </p>
-
-              <h2 className="text-xl font-semibold mt-6">☕ Kohvisegu valmistamine:</h2>
-              <p>Pane kaussi:</p>
-              <ul className="list-disc list-inside">
-                <li>2 sl lahustuvat kohvi</li>
-                <li>0,5–2 sl <strong>Meemeeste šokolaadimett</strong> (vastavalt sellele, kui magusat kohvi soovid)</li>
-                <li>soovi korral 1 sl pruuni suhkrut (teeb segu veelgi kreemjamaks)</li>
-                <li>2 sl leiget vett (et oleks hea vispeldada)</li>
-              </ul>
-              <p>
-                Seejärel <strong>vispelda / sega lusikaga / mikserda</strong> kuniks tekib <strong>kreemjas ja ühtlane tükivaba segu</strong>.
-              </p>
-
-              <h2 className="text-xl font-semibold mt-6">🥛 Serveerimine:</h2>
-              <ul className="list-disc list-inside">
-                <li>Vala klaasi umbes <strong>1/3 piima</strong> – see aitab hoida segu klaasi seintest lahti</li>
-                <li>Lisa piimale <strong>kohvisegu</strong> ning sega korralikult</li>
-                <li>Et kauss puhtaks saada: vala sinna veidi piima ja vispelda, see <strong>vahukiht</strong> sobib ideaalselt klaasi peale</li>
-                <li>Lisa veel piima (vastavalt soovitud kangusele)</li>
-                <li>Pane juurde jääkuubikud ❄️ ja <strong>naudi!</strong></li>
-              </ul>
+            {/* Parooli muutmise link */}
+            <div>
+              <p className="mb-1">Soovid muuta oma parooli?</p>
+              <a
+                href="/unustasid-parooli"
+                className="text-blue-600 hover:underline font-semibold"
+              >
+                Saada taastamislink e-postile
+              </a>
             </div>
-          )}
-        </div>
 
-        <div className="mt-10">
-          <h2 className="text-xl font-bold mb-2">Hoia silma peal, uued retseptid ilmuvad peagi!</h2>
-
-          <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="newsletter"
-            checked={newsletter}
-            onChange={handleNewsletterChange}
-            className="mr-2"
-          />
-            <label htmlFor="newsletter" className="text-black">
-              Soovin liituda uudiskirjaga
-            </label>
+            {/* Logi välja nupp – väiksem ja tagasihoidlikum */}
+            <div className="pt-4">
+              <button
+                onClick={() => {
+                  logout();
+                  navigate("/");
+                }}
+                className="text-red-600 hover:text-red-800 font-medium transition"
+              >
+                Logi välja
+              </button>
+            </div>
           </div>
-        </div>
-
-        <button
-          onClick={() => {
-            logout();
-            navigate("/");
-          }}
-          className="mt-10 w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition duration-300 font-bold"
-        >
-          Logi välja
-        </button>
+        )}
       </div>
     </div>
   );
